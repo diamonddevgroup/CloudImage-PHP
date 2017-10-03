@@ -1,6 +1,6 @@
 <?php
 
-$dir = str_replace(chr(92), chr(47), getcwd() . '/');
+$dir = $_SERVER['DOCUMENT_ROOT'];
 
 if (isset($_GET['image']) && !empty($_GET['image'])) {
     include_once 'image.component.php';
@@ -15,8 +15,6 @@ if (isset($_GET['image']) && !empty($_GET['image'])) {
     $quality = 100;
 
     $image_path = $dir . "/" . basename($_GET['image']);
-
-    $path = isset($_GET['param']) ? $_GET['param'] : '';
 
     $params = isset($_GET['param']) ? explode(",", $_GET['param']) : '';
     foreach ($params as $value) {
@@ -84,6 +82,7 @@ if (isset($_GET['image']) && !empty($_GET['image'])) {
         }
     }
 
+    error_log($image_path);
     if (file_exists($image_path)) {
         $Image = new Image();
 
@@ -156,5 +155,9 @@ if (isset($_GET['image']) && !empty($_GET['image'])) {
         }
 
         $Image->output($quality);
+    } else {
+        http_response_code(404);
     }
+} else {
+    http_response_code(404);
 }
